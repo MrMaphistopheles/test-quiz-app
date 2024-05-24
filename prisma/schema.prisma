@@ -31,17 +31,18 @@ model Rating {
 }
 
 model Quiz {
-    id        String   @id @default(cuid())
+    id        String     @id @default(cuid())
     name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
     Rating    Rating[]
+    Question  Question[]
 }
 
 model Record {
     id         String   @id @default(cuid())
     isTrue     Boolean  @default(false)
-    question   Question @relation(fields: [questionId], references: [id])
+    question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
     questionId String
     answers    Answer   @relation(fields: [answerId], references: [id])
     answerId   String
@@ -55,8 +56,10 @@ model Question {
     value      Int      @default(1)
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
+    quiz       Quiz     @relation(fields: [quizId], references: [id])
     Answer     Answer[]
     Record     Record[]
+    quizId     String
 }
 
 model Answer {
@@ -65,7 +68,7 @@ model Answer {
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
     status     Boolean  @default(false)
-    question   Question @relation(fields: [questionId], references: [id])
+    question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
     questionId String
     Record     Record[]
 }

@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { NextUiProviders } from "./_providers/ui/NextUiProvider";
+import Nav from "./_components/Nav";
 
 export const metadata = {
   title: "Create T3 App",
@@ -21,8 +22,9 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <NextUiProviders>
-            <main className="flex h-[100dvh] w-full items-center justify-center bg-white text-black">
+            <main className="flex h-[100dvh] w-full items-center justify-center bg-slate-100 text-black">
               {children}
+              <Nav />
             </main>
           </NextUiProviders>
         </TRPCReactProvider>
