@@ -8,7 +8,7 @@ export default async function Quiz({ params }: { params: { id: string } }) {
   const questions = await api.quiz.getQuestions();
 
   return (
-    <div className="flex h-[100dvh] w-full flex-col items-center justify-start gap-3 px-3 pt-3">
+    <div className="flex h-[100dvh] w-full max-w-[25em] flex-col items-center justify-start gap-3 px-3 pt-3">
       <h1 className="text-2xl font-medium">{data?.name}</h1>
 
       <AddQuestion id={params.id} />

@@ -6,12 +6,13 @@ import Status from "../_components/Status";
 import Value from "../_components/Value";
 import Edit from "../_components/Edit";
 import Delete from "../_components/Delete";
+import DeleteAnswer from "../_components/DeleteAnswer";
 
 export default async function Question({ params }: { params: { id: string } }) {
   const data = await api.quiz.getQuestion({ id: params.id });
   const answers = await api.quiz.getAnswers({ qid: params.id });
   return (
-    <div className="flex h-[100dvh] w-full flex-col items-center justify-start gap-3 px-3 pt-3">
+    <div className="flex h-[100dvh] w-full max-w-[25em] flex-col items-center justify-start gap-3 px-3 pt-3">
       <h1 className="text-2xl font-medium">{data?.definition}</h1>
       <AddAnswer qid={params.id} />
       <Value id={params.id} value={data?.value ?? 1} />
@@ -24,6 +25,7 @@ export default async function Question({ params }: { params: { id: string } }) {
         {answers.map((i) => (
           <Container key={i.id}>
             <p className="w-full px-3">{i.definition}</p>
+            <DeleteAnswer id={i.id} />
             <Status status={i.status} id={i.id} />
           </Container>
         ))}

@@ -13,6 +13,16 @@ export const quizRouter = createTRPCRouter({
       });
     }),
 
+  deleteQuiz: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.quiz.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+
   getQuizes: publicProcedure.query(({ ctx }) => {
     return ctx.db.quiz.findMany({
       orderBy: {
@@ -131,5 +141,53 @@ export const quizRouter = createTRPCRouter({
           status: !input.status,
         },
       });
+    }),
+
+  deleteAnswers: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.answer.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+
+  getQuestionForTest: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        limit: z.number(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const question = await ctx.db.question.findMany({
+        take: input.limit + 1,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          quizId: input.id,
+        },
+        include: {
+          Answer: true,
+        },
+      });
+
+      let nextCursor: typeof input.cursor | undefined = undefined;
+
+      if (question.length > input.limit) {
+        const nextItem = question.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      let hasMore = true;
+      if (nextCursor === undefined) {
+        hasMore = false;
+      }
+
+      return { question, nextCursor, hasMore };
     }),
 });
