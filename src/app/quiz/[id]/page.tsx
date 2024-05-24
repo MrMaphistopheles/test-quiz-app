@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default async function Quiz({ params }: { params: { id: string } }) {
   const data = await api.quiz.getQuize({ id: params.id });
-  const questions = await api.quiz.getQuestions();
+  const questions = await api.quiz.getQuestions({ id: params.id });
 
   return (
     <div className="flex h-[100dvh] w-full max-w-[25em] flex-col items-center justify-start gap-3 px-3 pt-3">
