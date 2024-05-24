@@ -1,4 +1,4 @@
-import { boolean, z } from "zod";
+import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
@@ -52,16 +52,18 @@ export const quizRouter = createTRPCRouter({
       });
     }),
 
-  getQuestions: publicProcedure.input(z.object({ id: z.string() })).query(({ ctx, input }) => {
-    return ctx.db.question.findMany({
-      where:{
-        quizId: input.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  }),
+  getQuestions: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.question.findMany({
+        where: {
+          quizId: input.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    }),
 
   getQuestion: publicProcedure
     .input(z.object({ id: z.string() }))
