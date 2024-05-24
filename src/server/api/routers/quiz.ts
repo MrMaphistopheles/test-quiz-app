@@ -52,8 +52,11 @@ export const quizRouter = createTRPCRouter({
       });
     }),
 
-  getQuestions: publicProcedure.query(({ ctx }) => {
+  getQuestions: publicProcedure.input(z.object({ id: z.string() })).query(({ ctx }) => {
     return ctx.db.question.findMany({
+      where:{
+        quizId: input.id,
+      },
       orderBy: {
         createdAt: "desc",
       },
