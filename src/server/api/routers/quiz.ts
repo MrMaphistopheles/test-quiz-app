@@ -195,4 +195,33 @@ export const quizRouter = createTRPCRouter({
 
       return { question, nextCursor, hasMore };
     }),
+
+  record: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        isTrue: z.boolean(),
+        qId: z.string(),
+        ansIds: z.array(z.string()),
+        quizId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { isTrue, userId, qId, ansIds, quizId } = input;
+      return await ctx.db.record.create({
+        data: {
+          isTrue: isTrue,
+          userId: userId,
+          questionId: qId,
+          quizId: quizId,
+          RecordAnswers: {
+            create: ansIds.map((i) => ({
+              answer: {
+                connect: { id: i },
+              },
+            })),
+          },
+        },
+      });
+    }),
 });

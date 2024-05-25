@@ -27,16 +27,27 @@ model Quiz {
     updatedAt DateTime   @updatedAt
     Rating    Rating[]
     Question  Question[]
+    Record    Record[]
 }
 
 model Record {
-    id         String   @id @default(cuid())
-    isTrue     Boolean  @default(false)
-    question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-    questionId String
-    answers    Answer   @relation(fields: [answerId], references: [id])
-    answerId   String
-    userId     String
+    id            String          @id @default(cuid())
+    isTrue        Boolean         @default(false)
+    question      Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId    String
+    userId        String
+    Quiz          Quiz?           @relation(fields: [quizId], references: [id])
+    quizId        String?
+    RecordAnswers RecordAnswers[]
+}
+
+model RecordAnswers {
+    recordId String
+    answerId String
+    record   Record @relation(fields: [recordId], references: [id])
+    answer   Answer @relation(fields: [answerId], references: [id])
+
+    @@id([recordId, answerId])
 }
 
 model Question {
@@ -52,12 +63,12 @@ model Question {
 }
 
 model Answer {
-    id         String   @id @default(cuid())
-    definition String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    status     Boolean  @default(false)
-    question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-    questionId String
-    Record     Record[]
+    id            String          @id @default(cuid())
+    definition    String
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+    status        Boolean         @default(false)
+    question      Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId    String
+    RecordAnswers RecordAnswers[]
 }
